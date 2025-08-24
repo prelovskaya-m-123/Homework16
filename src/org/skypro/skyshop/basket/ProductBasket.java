@@ -46,17 +46,19 @@ public class ProductBasket {
         }
         for (int i = 0; i < size; i++) {
             Product product = products[i];
+
+            if (product == null) {
+                continue;
+            }
+            System.out.println(product.getFormattedInfo());
+            total += product.getPrice();
+
             if (product.isSpecial()) {
                 specialProductsCount++;
             }
-            if (product != null) {
-                System.out.println(product.getFormattedInfo());
-                total += product.getPrice();
-            }
-
-            System.out.println("Итого: " + total);
-            System.out.println("Специальных товаров: " + specialProductsCount);
         }
+        System.out.println("Итого: " + total);
+        System.out.println("Специальных товаров: " + specialProductsCount);
         System.out.println("Итого: " + getTotalCost());
     }
 

@@ -11,12 +11,12 @@ public class App {
 
         ProductBasket basket = new ProductBasket();
 
-        DiscountedProduct shampoo = new DiscountedProduct("Шампунь", 280, 30);
-        DiscountedProduct washingPowder = new DiscountedProduct("Стиральный порошок", 400, 20);
-        DiscountedProduct marshmallows = new DiscountedProduct("Зефир", 150, 20);
-        FixPriceProduct coloredPencils = new FixPriceProduct("Цветные карандаши");
-        SimpleProduct notebook = new SimpleProduct("Тетрадь", 40);
-        SimpleProduct appleJuice = new SimpleProduct("Яблочный сок", 130);
+        Product shampoo = new DiscountedProduct("Шампунь", 280, 30);
+        Product washingPowder = new DiscountedProduct("Стиральный порошок", 400, 20);
+        Product marshmallows = new DiscountedProduct("Зефир", 150, 20);
+        Product coloredPencils = new FixPriceProduct("Цветные карандаши");
+        Product notebook = new SimpleProduct("Тетрадь", 40);
+        Product appleJuice = new SimpleProduct("Яблочный сок", 130);
 
         basket.addProduct(shampoo);
         basket.addProduct(washingPowder);

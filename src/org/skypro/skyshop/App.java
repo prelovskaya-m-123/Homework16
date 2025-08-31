@@ -11,50 +11,73 @@ public class App {
 
         ProductBasket basket = new ProductBasket();
 
-        Product shampoo = new DiscountedProduct("Шампунь", 280, 30);
-        Product washingPowder = new DiscountedProduct("Стиральный порошок", 400, 20);
-        Product marshmallows = new DiscountedProduct("Зефир", 150, 20);
-        Product coloredPencils = new FixPriceProduct("Цветные карандаши");
-        Product notebook = new SimpleProduct("Тетрадь", 40);
-        Product appleJuice = new SimpleProduct("Яблочный сок", 130);
+        try {
+            basket.addProduct(new DiscountedProduct("Шампунь", 280, 10));
+        }
+        catch (IllegalArgumentException e) {
+            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
+        }
+        try {
+            basket.addProduct(new DiscountedProduct("Стиральный порошок", 400, -1));
+        }
+        catch (IllegalArgumentException e) {
+            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
+        }
+        try {
+            basket.addProduct(new DiscountedProduct(null, 150, 20));
+        }
+        catch (IllegalArgumentException e) {
+            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
+        }
+        try {
+            basket.addProduct(new FixPriceProduct("Цветные карандаши"));
+        }
+        catch (IllegalArgumentException e) {
+            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
+        }
+        try {
+            basket.addProduct(new SimpleProduct("Тетрадь", 0));
+        }
+        catch (IllegalArgumentException e) {
+            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
+        }
+        try {
+            basket.addProduct(new SimpleProduct("Яблочный сок", 130));
+        }
+        catch (IllegalArgumentException e) {
+            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
+        }
+            basket.printInfo();
 
-        basket.addProduct(shampoo);
-        basket.addProduct(washingPowder);
-        basket.addProduct(marshmallows);
-        basket.addProduct(coloredPencils);
-        basket.addProduct(notebook);
-        basket.printInfo();
-        System.out.println();
+            System.out.println();
+        try {
+            basket.addProduct(new SimpleProduct("Зефир", 140));
+        }
+        catch (IllegalArgumentException e) {
+            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
+        }
 
-        basket.addProduct(appleJuice);
-        System.out.println();
+            System.out.println();
 
-        basket.containsProduct("Зефир");
-        System.out.println();
+            basket.containsProduct("Шампунь");
+            System.out.println();
 
-        basket.containsProduct("Печенье");
-        System.out.println();
+            basket.containsProduct("Печенье");
+            System.out.println();
 
-        basket.clearBasket();
-        System.out.println();
+            basket.clearBasket();
+            System.out.println();
 
-        basket.printInfo();
-        System.out.println();
+            basket.printInfo();
+            System.out.println();
 
-        basket.getTotalCost();
-        System.out.println();
+            basket.getTotalCost();
 
-        basket.containsProduct("Стиральный порошок");
+            System.out.println();
 
-        basket.printInfo();
+            basket.containsProduct("Шампунь");
 
-
-
-
-
-
-
-
+            basket.printInfo();
 
     }
 }

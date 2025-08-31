@@ -7,8 +7,8 @@ public abstract class Product implements Searchable {
     private final String name;
 
     public Product(String name) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Название товара не может быть пустым");
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Название товара не может быть пустым или состоять только из пробелов");
         }
         this.name = name;
     }
@@ -33,6 +33,13 @@ public abstract class Product implements Searchable {
     public abstract String getFormattedInfo();
 
     public abstract boolean isSpecial();
+
+
+
+
+
+
+
 
 }
 

@@ -6,6 +6,12 @@ public class DiscountedProduct extends Product {
 
     public DiscountedProduct(String name, int basePrice, int discountInWholePercentages) {
         super(name);
+        if (basePrice <= 0){
+            throw new IllegalArgumentException("Базовая цена продукта должна быть строго больше 0");
+        }
+        if (discountInWholePercentages < 0 || discountInWholePercentages > 100){
+            throw new IllegalArgumentException ("Размер скидки должен быть в диапазоне от 0 до 100 включительно");
+        }
         this.basePrice = basePrice;
         this.discountInWholePercentages = discountInWholePercentages;
     }
@@ -31,10 +37,6 @@ public class DiscountedProduct extends Product {
 
     @Override
     public int getPrice() {
-        if (discountInWholePercentages < 1 || discountInWholePercentages > 100) {
-            throw new IllegalArgumentException("Размер скидки должен быть от 1 до 100 процентов");
-        }
-
         double discountedPrice = basePrice * (1 - (discountInWholePercentages / 100.0));
         return (int) Math.round(discountedPrice);
     }

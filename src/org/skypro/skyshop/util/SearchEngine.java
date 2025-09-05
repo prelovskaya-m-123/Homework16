@@ -22,29 +22,53 @@ public class SearchEngine {
         searchables[currentSize++] = searchable;
     }
 
-    public Searchable[] search(String query) {
+    public Searchable findBestMatch(String query) throws BestResultNotFound {
         if (query == null || query.isEmpty()) {
-            return new Searchable[0];
+            throw new IllegalArgumentException("Поисковый запрос не может быть пустым");
         }
 
-        Searchable[] results = new Searchable[5];
-        int resultIndex = 0;
+        Searchable bestMatch = null;
+        int maxOccurrences = -1;
 
         String lowerQuery = query.toLowerCase();
 
         for (int i = 0; i < currentSize; i++) {
             Searchable searchable = searchables[i];
             String searchTerm = searchable.getSearchTerm().toLowerCase();
+            
+            int occurrences = countSubstringOccurrences(searchTerm, lowerQuery);
 
-            if (searchTerm.contains(lowerQuery)) {
-                results[resultIndex++] = searchable;
-                
-                if (resultIndex == 5) {
-                    break;
-                }
+            if (occurrences > 0 && occurrences > maxOccurrences) {
+                maxOccurrences = occurrences;
+                bestMatch = searchable;
             }
         }
 
-        return results;
+        if (bestMatch == null) {
+            throw new BestResultNotFound(query);
+        }
+
+        return bestMatch;
+    }
+
+
+    private int countSubstringOccurrences(String str, String substring) {
+        if (str == null || substring == null|| substring.isEmpty()) {
+            return 0;
+        }
+
+        int count = 0;
+        int index = 0;
+        int substringLength = substring.length();
+
+        int substringIndex = str.indexOf(substring, index);
+
+        while (substringIndex != -1) {
+            count++;
+            index = substringIndex + substringLength;
+            substringIndex = str.indexOf(substring, index);
+        }
+
+        return count;
     }
 }

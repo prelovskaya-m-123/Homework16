@@ -1,6 +1,7 @@
 package org.skypro.skyshop;
 
 import org.skypro.skyshop.article.Article;
+import org.skypro.skyshop.util.BestResultNotFound;
 import org.skypro.skyshop.util.SearchEngine;
 import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.util.Searchable;
@@ -29,27 +30,22 @@ public class SearchEngineDemo {
         testSearch(engine, "пауэрбанк");
         testSearch(engine, "смартфон");
         testSearch(engine, "для школьника");
+        testSearch(engine, "несуществующий запрос");
     }
 
     private static void testSearch(SearchEngine engine, String query) {
         System.out.println("\nПоиск по запросу: " + query);
 
-        Searchable[] results = engine.search(query);
-
-        if (results.length == 0) {
-            System.out.println("Ничего не найдено");
-            return;
-        }
-
-        for (int i = 0; i < results.length; i++) {
-            Searchable result = results[i];
-            if (result != null) {
-                System.out.println((i + 1) + ". " +
-                        result.getName() + " (" + result.getContentType() + ")");
-            } else {
-                System.out.println((i + 1) + ". Результат не найден");
+        try {
+            Searchable result = engine.findBestMatch(query);
+            System.out.println("Найден объект:");
+            System.out.println("Название: " + result.getName());
+            System.out.println("Тип: " + result.getContentType());
+            System.out.println("Описание: " + result.getSearchTerm());
+        } catch (BestResultNotFound e) {
+            System.err.println("Ошибка поиска: " + e.getMessage());
             }
         }
     }
-}
+
 

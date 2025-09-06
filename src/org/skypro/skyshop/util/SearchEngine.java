@@ -1,59 +1,56 @@
 package org.skypro.skyshop.util;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchEngine {
-    private final Searchable[] searchables;
-    private int currentSize;
+    private final List<Searchable> searchables;
+    private final int capacity;
 
     public SearchEngine(int capacity) {
         if (capacity <= 0) {
             throw new IllegalArgumentException("Емкость должна быть положительным числом");
         }
-        this.searchables = new Searchable[capacity];
-        this.currentSize = 0;
+        this.searchables = new ArrayList<>(capacity);
+        this.capacity = capacity;
     }
 
     public void add(Searchable searchable) {
-        if (currentSize >= searchables.length) {
+        if (searchables.size() >= capacity) {
             throw new IllegalStateException("Превышена максимальная емкость поискового движка");
         }
         if (searchable == null) {
             throw new NullPointerException("Объект для поиска не может быть null");
         }
-        searchables[currentSize++] = searchable;
+        searchables.add(searchable);
     }
 
-    public Searchable findBestMatch(String query) throws BestResultNotFound {
+    public List <Searchable> findAllMatches(String query) throws BestResultNotFound {
         if (query == null || query.isEmpty()) {
             throw new IllegalArgumentException("Поисковый запрос не может быть пустым");
         }
 
-        Searchable bestMatch = null;
-        int maxOccurrences = -1;
-
+        List<Searchable> matchingResults = new ArrayList<>();
         String lowerQuery = query.toLowerCase();
 
-        for (int i = 0; i < currentSize; i++) {
-            Searchable searchable = searchables[i];
+        for (Searchable searchable : searchables) {
             String searchTerm = searchable.getSearchTerm().toLowerCase();
             
             int occurrences = countSubstringOccurrences(searchTerm, lowerQuery);
 
-            if (occurrences > 0 && occurrences > maxOccurrences) {
-                maxOccurrences = occurrences;
-                bestMatch = searchable;
+            if (occurrences > 0) {
+                matchingResults.add(searchable);
             }
         }
 
-        if (bestMatch == null) {
+        if (matchingResults.isEmpty()) {
             throw new BestResultNotFound(query);
         }
 
-        return bestMatch;
+        return matchingResults;
     }
 
-
     private int countSubstringOccurrences(String str, String substring) {
-        if (str == null || substring == null|| substring.isEmpty()) {
+        if (str == null || substring == null || substring.isEmpty()) {
             return 0;
         }
 

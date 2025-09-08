@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.skypro.skyshop.product.Product;
 
-public class ProductBasket implements Iterable<Product> {
+public class ProductBasket {
 
     private List<Product> products;
     private final int MAX_SIZE = 5;
@@ -35,36 +35,6 @@ public class ProductBasket implements Iterable<Product> {
             }
         }
         return removedProducts;
-    }
-
-    @Override
-    public Iterator<Product> iterator() {
-        return new ProductIterator();
-    }
-
-    private class ProductIterator implements Iterator<Product> {
-        private int currentIndex = 0;
-
-        @Override
-        public boolean hasNext() {
-            return currentIndex < products.size();
-        }
-
-        @Override
-        public Product next() {
-            if (!hasNext()) {
-                throw new java.util.NoSuchElementException();
-            }
-            return products.get(currentIndex++);
-        }
-
-        @Override
-        public void remove() {
-            if (currentIndex == 0) {
-                throw new IllegalStateException();
-            }
-            products.remove(--currentIndex);
-        }
     }
 
 

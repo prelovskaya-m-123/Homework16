@@ -7,6 +7,7 @@ import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.util.Searchable;
 
 import java.util.List;
+import java.util.Map;
 
 public class SearchEngineDemo {
 
@@ -39,14 +40,15 @@ public class SearchEngineDemo {
         System.out.println("\nПоиск по запросу: " + query);
 
         try {
-            List<Searchable> results = engine.findAllMatches(query);
+            Map<String,Searchable> results = engine.findAllMatches(query);
 
             if (results.isEmpty()) {
                 System.out.println("По запросу не найдено результатов");
                 return;
             }
 
-            for (Searchable result : results) {
+            for (Map.Entry<String, Searchable> entry : results.entrySet()) {
+                Searchable result = entry.getValue();
 
                 System.out.println("Найден объект:");
                 System.out.println("Название: " + result.getName());

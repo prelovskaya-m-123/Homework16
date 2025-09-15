@@ -6,6 +6,9 @@ import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.SimpleProduct;
 
+import java.util.Iterator;
+import java.util.List;
+
 public class App {
     public static void main(String[] args) {
 
@@ -13,44 +16,19 @@ public class App {
 
         try {
             basket.addProduct(new DiscountedProduct("Шампунь", 280, 10));
-        }
-        catch (IllegalArgumentException e) {
-            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
-        }
-        try {
-            basket.addProduct(new DiscountedProduct("Стиральный порошок", 400, -1));
-        }
-        catch (IllegalArgumentException e) {
-            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
-        }
-        try {
-            basket.addProduct(new DiscountedProduct(null, 150, 20));
-        }
-        catch (IllegalArgumentException e) {
-            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
-        }
-        try {
             basket.addProduct(new FixPriceProduct("Цветные карандаши"));
-        }
-        catch (IllegalArgumentException e) {
-            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
-        }
-        try {
-            basket.addProduct(new SimpleProduct("Тетрадь", 0));
-        }
-        catch (IllegalArgumentException e) {
-            System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
-        }
-        try {
+            basket.addProduct(new SimpleProduct("Тетрадь", 30));
             basket.addProduct(new SimpleProduct("Яблочный сок", 130));
         }
         catch (IllegalArgumentException e) {
             System.err.println("Ошибка при добавлении продукта: " + e.getMessage());
         }
-            basket.printInfo();
-
             System.out.println();
-        try {
+
+            basket.printInfo();
+            System.out.println();
+
+            try {
             basket.addProduct(new SimpleProduct("Зефир", 140));
         }
         catch (IllegalArgumentException e) {
@@ -59,26 +37,61 @@ public class App {
 
             System.out.println();
 
-            basket.containsProduct("Шампунь");
+            basket.containsProduct("Зефир");
             System.out.println();
 
             basket.containsProduct("Печенье");
             System.out.println();
 
-            basket.clearBasket();
-            System.out.println();
 
-            basket.printInfo();
-            System.out.println();
+        // Удаляем существующий продукт (шампунь):
+        List<Product> removedProducts = basket.removeProductsByName("Шампунь");
 
-            basket.getTotalCost();
+        System.out.println("УДАЛЕННЫЕ ПРОДУКТЫ: ");
+        for (Product product : removedProducts) {
+            System.out.println("- " + product.getFormattedInfo());
+        }
 
-            System.out.println();
+        System.out.println();
 
-            basket.containsProduct("Шампунь");
+        // Содержимое корзины после удаления:
+        basket.printInfo();
+        System.out.println();
 
-            basket.printInfo();
+        // Удаляем существующий продукт (шоколад):
+        List<Product> removedNonExisting = basket.removeProductsByName("Шоколад");
 
+        // Проверяем результат
+        if (removedNonExisting.isEmpty()) {
+            System.out.println("Список удаленных продуктов: Список пуст");
+        } else {
+            System.out.println("Удаленные продукты:");
+            for (Product product : removedNonExisting) {
+                System.out.println("- " + product.getFormattedInfo());
+            }
+        }
+
+        System.out.println();
+
+        // Итоговое состояние корзины:
+        basket.printInfo();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

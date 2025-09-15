@@ -6,6 +6,8 @@ import org.skypro.skyshop.util.SearchEngine;
 import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.util.Searchable;
 
+import java.util.List;
+
 public class SearchEngineDemo {
 
     public static void main(String[] args) {
@@ -37,11 +39,21 @@ public class SearchEngineDemo {
         System.out.println("\nПоиск по запросу: " + query);
 
         try {
-            Searchable result = engine.findBestMatch(query);
-            System.out.println("Найден объект:");
-            System.out.println("Название: " + result.getName());
-            System.out.println("Тип: " + result.getContentType());
-            System.out.println("Описание: " + result.getSearchTerm());
+            List<Searchable> results = engine.findAllMatches(query);
+
+            if (results.isEmpty()) {
+                System.out.println("По запросу не найдено результатов");
+                return;
+            }
+
+            for (Searchable result : results) {
+
+                System.out.println("Найден объект:");
+                System.out.println("Название: " + result.getName());
+                System.out.println("Тип: " + result.getContentType());
+                System.out.println("Описание: " + result.getSearchTerm());
+                System.out.println("------------------------");
+            }
         } catch (BestResultNotFound e) {
             System.err.println("Ошибка поиска: " + e.getMessage());
             }

@@ -1,6 +1,8 @@
 package org.skypro.skyshop.util;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SearchEngine {
     private final List<Searchable> searchables;
@@ -24,12 +26,12 @@ public class SearchEngine {
         searchables.add(searchable);
     }
 
-    public List <Searchable> findAllMatches(String query) throws BestResultNotFound {
+    public Map<String, Searchable> findAllMatches(String query) throws BestResultNotFound {
         if (query == null || query.isEmpty()) {
             throw new IllegalArgumentException("Поисковый запрос не может быть пустым");
         }
 
-        List<Searchable> matchingResults = new ArrayList<>();
+        Map<String, Searchable> matchingResults = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         String lowerQuery = query.toLowerCase();
 
         for (Searchable searchable : searchables) {
@@ -38,7 +40,8 @@ public class SearchEngine {
             int occurrences = countSubstringOccurrences(searchTerm, lowerQuery);
 
             if (occurrences > 0) {
-                matchingResults.add(searchable);
+                String name = searchable.getName();
+                matchingResults.put(name,searchable);
             }
         }
 

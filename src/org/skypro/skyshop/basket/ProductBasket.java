@@ -30,14 +30,14 @@ public class ProductBasket {
 
     public List<Product> removeProductsByName(String name) {
         System.out.println("УДАЛЕНИЕ ПРОДУКТА ПО ИМЕНИ");
-        name = name.toLowerCase();
+        String nameLowerCase = name.toLowerCase();
         List<Product> removedProducts = new LinkedList<>();
 
-        List<Product> productsList = productsMap.get(name);
+        List<Product> productsList = productsMap.get(nameLowerCase);
 
         if (productsList != null) {
             removedProducts.addAll(productsList);
-            productsMap.remove(name);
+            productsMap.remove(nameLowerCase);
         }
 
         return removedProducts;

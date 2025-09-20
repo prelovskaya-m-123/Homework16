@@ -1,19 +1,22 @@
 package org.skypro.skyshop.util;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class SearchEngine {
-    private final List<Searchable> searchables;
+    private final Set<Searchable> searchables;
     private final int capacity;
 
     public SearchEngine(int capacity) {
         if (capacity <= 0) {
             throw new IllegalArgumentException("Емкость должна быть положительным числом");
         }
-        this.searchables = new ArrayList<>(capacity);
-        this.capacity = capacity;
+        this.searchables = new TreeSet<>((s1, s2) -> {
+            int lengthCompare = Integer.compare(s2.getName().length(), s1.getName().length());
+            if (lengthCompare != 0) {
+                return lengthCompare;
+            }
+            return s1.getName().compareToIgnoreCase(s2.getName());
+        });
+            this.capacity = capacity;
     }
 
     public void add(Searchable searchable) {
@@ -26,12 +29,19 @@ public class SearchEngine {
         searchables.add(searchable);
     }
 
-    public Map<String, Searchable> findAllMatches(String query) throws BestResultNotFound {
+    public Set<Searchable> findAllMatches(String query) throws BestResultNotFound {
         if (query == null || query.isEmpty()) {
             throw new IllegalArgumentException("Поисковый запрос не может быть пустым");
         }
 
-        Map<String, Searchable> matchingResults = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        Set<Searchable> matchingResults = new TreeSet<>((s1, s2) -> {
+            int lengthCompare = Integer.compare(s2.getName().length(), s1.getName().length());
+            if (lengthCompare != 0) {
+                return lengthCompare;
+            }
+            return s1.getName().compareToIgnoreCase(s2.getName());
+        });
+
         String lowerQuery = query.toLowerCase();
 
         for (Searchable searchable : searchables) {
@@ -40,8 +50,7 @@ public class SearchEngine {
             int occurrences = countSubstringOccurrences(searchTerm, lowerQuery);
 
             if (occurrences > 0) {
-                String name = searchable.getName();
-                matchingResults.put(name,searchable);
+                matchingResults.add(searchable);
             }
         }
 

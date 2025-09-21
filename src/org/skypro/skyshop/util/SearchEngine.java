@@ -1,5 +1,6 @@
 package org.skypro.skyshop.util;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SearchEngine {
     private final Set<Searchable> searchables;
@@ -9,13 +10,7 @@ public class SearchEngine {
         if (capacity <= 0) {
             throw new IllegalArgumentException("Емкость должна быть положительным числом");
         }
-        this.searchables = new TreeSet<>((s1, s2) -> {
-            int lengthCompare = Integer.compare(s2.getName().length(), s1.getName().length());
-            if (lengthCompare != 0) {
-                return lengthCompare;
-            }
-            return s1.getName().compareToIgnoreCase(s2.getName());
-        });
+        this.searchables = new TreeSet<>(new SearchableComparator());
             this.capacity = capacity;
     }
 
@@ -34,30 +29,18 @@ public class SearchEngine {
             throw new IllegalArgumentException("Поисковый запрос не может быть пустым");
         }
 
-        Set<Searchable> matchingResults = new TreeSet<>((s1, s2) -> {
-            int lengthCompare = Integer.compare(s2.getName().length(), s1.getName().length());
-            if (lengthCompare != 0) {
-                return lengthCompare;
-            }
-            return s1.getName().compareToIgnoreCase(s2.getName());
-        });
-
         String lowerQuery = query.toLowerCase();
 
-        for (Searchable searchable : searchables) {
-            String searchTerm = searchable.getSearchTerm().toLowerCase();
-            
-            int occurrences = countSubstringOccurrences(searchTerm, lowerQuery);
-
-            if (occurrences > 0) {
-                matchingResults.add(searchable);
-            }
-        }
+        Set<Searchable> matchingResults = searchables.stream()
+                .filter(searchable -> {
+                    String searchTerm = searchable.getSearchTerm().toLowerCase();
+                    return countSubstringOccurrences(searchTerm, lowerQuery) > 0;
+                })
+                .collect(Collectors.toCollection(() -> new TreeSet<>(new SearchableComparator())));
 
         if (matchingResults.isEmpty()) {
             throw new BestResultNotFound(query);
         }
-
         return matchingResults;
     }
 

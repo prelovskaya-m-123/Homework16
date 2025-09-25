@@ -44,49 +44,51 @@ public class ProductBasket {
     }
 
     private int getTotalProductCount() {
-        int count = 0;
-        for (List<Product> products : productsMap.values()) {
-            count += products.size();
-        }
-        return count;
+        return productsMap.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .mapToInt(product -> 1)
+                .sum();
     }
 
     public int getTotalCost() {
         System.out.println("ПОЛУЧЕНИЕ СТОИМОСТИ КОРЗИНЫ");
-        int total = 0;
-        for (List<Product> products : productsMap.values()) {
-            for (Product product : products) {
-                total += product.getPrice();
-            }
-        }
+        int total = productsMap.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .mapToInt(Product::getPrice)
+                .sum();
+
         if (total == 0) {
             System.out.println("Корзина пуста, стоимость: 0");
         }
         return total;
     }
 
+    private long getSpecialCount() {
+        return productsMap.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(Product::isSpecial)
+                .count();
+    }
+
     public void printInfo() {
         System.out.println("ПЕЧАТЬ СОДЕРЖИМОГО КОРЗИНЫ");
-        int total = 0;
-        int specialProductsCount = 0;
 
         if (productsMap.isEmpty()) {
             System.out.println("В корзине пусто");
             return;
         }
 
-        for (List<Product> products : productsMap.values()) {
-            for (Product product : products) {
-                System.out.println(product.getFormattedInfo());
-                total += product.getPrice();
+        productsMap.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .forEach(product -> {
+                    System.out.println(product.getFormattedInfo());
+                });
 
-                if (product.isSpecial()) {
-                    specialProductsCount++;
-                }
-            }
-        }
-        System.out.println("Итого: " + total);
-        System.out.println("Специальных товаров: " + specialProductsCount);
+        System.out.println("Специальных товаров: " + getSpecialCount());
         System.out.println("Итого: " + getTotalCost());
     }
 
